@@ -1,0 +1,134 @@
+<%- include('../layouts/header.ejs') %>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><%= title %>
+
+            <a href="/employee/add" class=" pull-right"><i class="fa fa-plus fa-fw"></i>Add New Employee</a>
+            <a class="btn btn-info ml-3 delete_selected_real displayNone">delete-selected</a>
+
+            </div>
+
+
+
+
+
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>    
+                            <th>Name</th>
+                            <th>Date of Birth</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <% if (employees) { %>
+                                <% employees.forEach(function(employee){ %>
+                                    <tr>
+
+                                        <td scope="row">
+                                            <div class="form-group">
+                                                 <input type="checkbox" class="form-control my-checkbox" name="id" id="id" value="1"
+                                                       data-id="<%= employee.id %>"
+                                                       placeholder="Name">
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <% if(employee.pic=="no-user-pic.png"){ %>
+                                               <img src="/images/no-user-image.png" style="height:50px;">     
+                                           <% } %>
+                                        </td>
+                                        <td><%= employee.name %></td>
+                                        <td><%= moment(employee.date_of_birth).format(shortDateFormat) %></td>
+                                        <td>
+                                            <a href="/<%- locals.locale %>/employee/edit/<%= employee.id %>"><i class="fa fa-edit"></i></a>
+                                            <a href="#" class="view-employee" data-employee-id="<%= employee.id %>"><i class="fa fa-eye"></i></a>
+                                            <a href="/<%- locals.locale %>/employee/delete/<%= employee.id %>"><i class="fa fa-remove"></i></a>
+                                        </td>
+
+                                    </tr>
+                                <% }) %>
+                            <% } %>        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="employee_detail" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Employee Details</h4>
+            </div>
+            <div class="modal-body">
+                <p><b>Name</b>: <span class="employee-name employee-details"></span></p>
+                <p><b>Email:</b> <span class="employee-email employee-details"></span></p>
+                <p><b>Company :</b> <span class="employee-company employee-details"></span></p>
+                <p><b>DOB:</b><span class="employee-dob employee-details"></span></p>
+                <p><b>DOJ:</b><span class="employee-doj employee-details"></span></p>
+                <p><b>DOL:</b> <span class="employee-dol employee-details"></span></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+<script>
+    $(document).ready(function () {
+
+        // alert(1)
+        $(".my-checkbox").click(function () {
+
+            $(".delete_selected").attr('data-checked-length', $(".my-checkbox:checked").length);
+
+            console.log($(".my-checkbox:checked").length);
+        });
+
+        $(".delete_selected").click(function (e) {
+
+            e.preventDefault();
+
+            alert(1);
+            if ($(".delete_selected").attr('data-checked-length') == 0) {
+                alert("No item checked");
+                return false;
+            }
+
+            var selected = [];
+
+            $(".my-checkbox:checked").each(function () {
+                selected.push($(this).attr('data-id'));
+            });
+
+            $(".delete_selected_real").attr('href', $(".delete_selected").attr('data-href') + selected.join(','));
+
+            $(".delete_selected_real")[0].click();
+            console.log($(".delete_selected").attr('data-href') + selected.join(','));
+        });
+
+        $(".export_excel").click(function (e) {
+
+            e.preventDefault();
+
+            // $(".export_excel_real")[0].click();
+            $(".export_excel_real").submit();
+        });
+    });
+
+</script>
+
+
+<%- include('../layouts/footer.ejs') %>
+

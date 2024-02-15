@@ -1,0 +1,14 @@
+{
+  "error.login": "An error occurred during login",
+  "error": {
+    "missingField": "Please provide {{field}} RU"
+  },
+  "Name": "Name ru",
+  "Email address": "Email address ru",
+  "image": "image ru",
+  "Customer deleted successfully": "Customer deleted successfully ru",
+  "Import": "Import ru",
+  "File": "File ru",
+  "Welcome to Home": "Welcome to Home ru",
+  "Customers": "Customers en"
+}

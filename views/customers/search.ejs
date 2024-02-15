@@ -1,0 +1,149 @@
+<%- include('../layouts/header.ejs') %>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <%= title %><a href="/<%- locals.locale %>/customers/add" class="pull-right"><i
+                            class="fa fa-plus fa-fw"></i>Add item</a>
+                <a class="btn btn-info ml-3 delete_selected_real displayNone">delete-selected</a>
+            </div>
+
+
+            <br/>
+            <form class="search_form" action="/<%- locals.locale %>/customers/search" method="get" name="search" >
+
+                <div class="form-group">
+                     <input type="text" class="form-control" name="term" id="term" value="<%= term %>" placeholder="search">
+                </div>
+
+                <button type="submit" class="btn btn-info">Search</button>
+            </form>
+
+
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Surname</th>
+                        <th>Age</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% if (customers) { %>
+                        <% customers.forEach(function(item){ %>
+                            <tr>
+                                <td scope="row">
+                                    <div class="form-group">
+                                        <input type="checkbox" class="form-control my-checkbox" name="id" id="id" value="1"
+                                               data-id="<%= item.id %>" >
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <%= item.name %>
+                                </td>
+                                <td>
+                                    <%= item.email %>
+                                </td>
+                                <td>
+                                    <%= item.surname %>
+                                </td>
+                                <td>
+                                    <%= item.age %>
+                                </td>
+                                <td>
+                                    <%= item.description %>
+                                </td>
+                                <td>
+                                    <a href="/<%- locals.locale %>/customers/edit/<%= item.id %>"><i class="fa fa-edit"></i></a>
+
+                                    <a href="#" class="view-item" data-id="<%= item.id %>"><i class="fa fa-eye"></i></a>
+                                    <a href="/<%- locals.locale %>/customers/delete/<%= item.id %>"><i class="fa fa-remove"></i></a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="item_detail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">item Details</h4>
+            </div>
+            <div class="modal-body">
+                <p><b>Name</b>: <span class="item-name item-details"></span></p>
+                <p><b>Email:</b> <span class="item-email item-details"></span></p>
+                <p><b>Surname :</b> <span class="item-surname item-details"></span></p>
+                <p><b>Age:</b><span class="item-age item-details"></span></p>
+                <p><b>Description:</b><span class="item-description item-details"></span></p>
+             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $(".my-checkbox").click(function () {
+
+            $(".delete_selected").attr('data-checked-length', $(".my-checkbox:checked").length);
+
+            console.log($(".my-checkbox:checked").length);
+        });
+
+        $(".delete_selected").click(function (e) {
+
+            e.preventDefault();
+
+            alert(1);
+            if ($(".delete_selected").attr('data-checked-length') == 0) {
+                alert("No item checked");
+                return false;
+            }
+
+            var selected = [];
+
+            $(".my-checkbox:checked").each(function () {
+                selected.push($(this).attr('data-id'));
+            });
+
+            $(".delete_selected_real").attr('href', $(".delete_selected").attr('data-href') + selected.join(','));
+
+            $(".delete_selected_real")[0].click();
+            console.log($(".delete_selected").attr('data-href') + selected.join(','));
+        });
+
+        $(".export_excel").click(function (e) {
+
+            e.preventDefault();
+
+            // $(".export_excel_real")[0].click();
+            $(".export_excel_real").submit();
+        });
+    });
+
+</script>
+
+
+<%- include('../layouts/footer.ejs') %>

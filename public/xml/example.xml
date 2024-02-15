@@ -1,0 +1,30 @@
+<library>
+    <book>
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <publication_year>1925</publication_year>
+        <genres>
+            <genre>Drama</genre>
+            <genre>Romance</genre>
+        </genres>
+    </book>
+    <book>
+        <title>To Kill a Mockingbird</title>
+        <author>Harper Lee</author>
+        <publication_year>1960</publication_year>
+        <genres>
+            <genre>Drama</genre>
+            <genre>Legal fiction</genre>
+        </genres>
+    </book>
+    <book>
+        <title>1984</title>
+        <author>George Orwell</author>
+        <publication_year>1949</publication_year>
+        <genres>
+            <genre>Dystopian</genre>
+            <genre>Political fiction</genre>
+            <genre>Social science fiction</genre>
+        </genres>
+    </book>
+</library>
