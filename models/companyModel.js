@@ -42,9 +42,11 @@ class CompanyModel {
 
     static async updateCompany(companyId, company) {
         try {
+            console.log("updateCompany",companyId, company);
             const result = await sql.query("UPDATE company SET ? WHERE id = ?", [company, companyId]);
             return result;
         } catch (err) {
+            console.log("err",err);
             throw err;
         }
     }

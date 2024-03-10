@@ -1,0 +1,60 @@
+<!-- views/login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Optional: Custom styles */
+        body {
+            padding: 50px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success">
+        <%= success %>
+    </div>
+<% } %>
+
+
+
+<% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+    <div class="alert alert-danger">
+        <!-- Iterate through each error message in the flash message -->
+        <% errors.forEach(function (error) { %>
+            <p><%= error %></p>
+        <% }); %>
+    </div>
+<% } %>
+
+<h2 class="text-center">Login</h2>
+<form action="/login" method="POST" class="mx-auto">
+    <div class="form-group">
+        <label for="username">Username:</label>
+<!--        required-->
+        <input type="text" id="username" name="username" class="form-control" >
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" class="form-control" >
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+    <a href="/register" class="btn btn-primary btn-block">Register</a>
+</form>
+
+<script type="text/javascript" src="/js/jquery-3.3.1.js"></script>
+<!--<script type="text/javascript" src="/js/bootstrap.min.js"></script>-->
+<!-- Bootstrap JS (Optional) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

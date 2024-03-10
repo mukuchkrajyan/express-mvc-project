@@ -1,5 +1,8 @@
 <%- include('../layouts/header.ejs') %>
 <div class="row">
+
+
+
     <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading"><%= title %></div>
@@ -53,7 +56,7 @@
                     <div class="form-group"> 
                       <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="/employee"><button type="button" class="btn btn-default">Cancel</button></a>
+                        <a href="/<%- locals.locale %>/employee"><button type="button" class="btn btn-default">Cancel</button></a>
                       </div>
                     </div>
                   </form>

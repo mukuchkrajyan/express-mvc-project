@@ -1,3 +1,4 @@
+const ExchangeDataParser = require("../ExchangeDataServices/DataHtmlParser");
 const customersModel = require("../models/customerModel");
 const {parse} = require('url');
 const path = require('path');
@@ -25,8 +26,12 @@ class CustomersController {
     static async index(req, res, next) {
         try {
 // console.log("CustomersController",res.locals);
-             const items = await customersModel.getAllItems();
-            res.render('customers/index', {title: 'Список клиентов', customers: items});
+            const items = await customersModel.getAllItems();
+            res.render('customers/index', {
+                title: 'Список клиентов',
+                customers: items,
+                userRole: req.userRole
+            });
         } catch (err) {
             throw err;
         }
@@ -132,7 +137,7 @@ class CustomersController {
             // console.log(xml_path);
             // return false;
             // Alternatively, parse XML from a file
-            const xmlFilePath = xml_path+'/example.xml'; // Path to your XML file
+            const xmlFilePath = xml_path + '/example.xml'; // Path to your XML file
             fs.readFile(xmlFilePath, 'utf-8', (err, data) => {
                 if (err) {
                     console.error('Error reading XML file:', err);
@@ -150,7 +155,7 @@ class CustomersController {
                             console.log(titles); // Output: ['The Great Gatsby', 'To Kill a Mockingbird', '1984']
 
                             return titles;
-                         }
+                        }
                     });
                 }
             });
@@ -334,6 +339,12 @@ class CustomersController {
 
         try {
 
+            if (req.userRole !== "admin") {
+                req.flash('error', 'You do not have permission to perform this action.');
+                res.redirect('/' + res.locals.locale + '/customers/');
+                return;
+            }
+
             console.log("before validate");
 
             const errors = await validationMiddleware.validate(req);
@@ -409,7 +420,11 @@ class CustomersController {
                 req.flash('error', 'Sorry, the customer does not exist!');
                 res.redirect('/customers');
             } else {
-                res.render('customers/edit', {title: 'Edit Customer', customer: result, data: data});
+                res.render('customers/edit', {
+                    title: 'Edit Customer',
+                    customer: result,
+                    data: data,
+                });
             }
         } catch (err) {
             throw err;
@@ -418,8 +433,16 @@ class CustomersController {
 
     static async update(req, res) {
         try {
+
+            if (req.userRole !== "admin") {
+                req.flash('error', 'You do not have permission to perform this action.');
+                res.redirect('/' + res.locals.locale + '/customers/');
+                return;
+            }
+
             const id = req.params.id;
 
+            var basic_edit_url = '/' + res.locals.locale + '/customers/edit/';
 
             const errors = await validationMiddleware.validate(req);
 
@@ -442,10 +465,10 @@ class CustomersController {
 
                 if (result.affectedRows === 1) {
                     req.flash('success', 'Customer information updated successfully.');
-                    res.redirect('/customers');
+                    res.redirect('/' + res.locals.locale + '/customers');
                 } else {
                     req.flash('error', 'There was an error in updating customer.');
-                    res.redirect('/customers/edit/' + id);
+                    res.redirect(basic_edit_url + id);
                 }
             } else {
                 console.log("before err_msg");
@@ -453,7 +476,7 @@ class CustomersController {
 
                 console.log(err_msg);
                 req.flash('error', err_msg);
-                res.redirect('/customers/edit/' + id);
+                res.redirect(basic_edit_url + id);
             }
         } catch (err) {
             throw err;

@@ -1,6 +1,8 @@
 const employeeModel = require('../models/employeeModel');
 const companyModel = require('../models/companyModel');
 const dateFormat = require('dateformat');
+const ValidationMiddlewareEmployee = require("../middleware/validationMiddlewareEmployee");
+const validationMiddlewareEmployee = new ValidationMiddlewareEmployee();
 
 class EmployeeController {
     static async index(req, res, next) {
@@ -81,19 +83,23 @@ class EmployeeController {
 
     static async edit(req, res) {
         try {
+            // console.log("res.locals.locale",res.locals.locale);
             const employee_id = req.params.employee_id;
             const result = await employeeModel.getEmployeeById(employee_id);
+
+            // console.log("result",result);
 
             if (result === null) {
                 req.flash('error', 'Sorry the employee does not exist!');
                 res.redirect('/employee');
             } else {
                 const companies = await companyModel.getAllCompany();
+
                 res.render('employee/edit', {
                     title: 'Edit Employee',
                     employee_id: employee_id,
                     companies: companies,
-                    employee: result[0]
+                    employee: result
                 });
             }
         } catch (err) {
@@ -104,15 +110,15 @@ class EmployeeController {
     static async update(req, res) {
         try {
             const employeeId = req.params.employee_id;
-            req.assert('name', 'Name is required.').notEmpty();
-            req.assert('email', 'Email is required.').notEmpty();
-            req.assert('company', 'Company must be selected.').notEmpty();
-            req.assert('date_of_birth', 'Date of birth must not be empty.').notEmpty();
-            req.assert('joining_date', 'Joining Date must not be empty.').notEmpty();
 
-            const errors = req.validationErrors();
+            const errors = await validationMiddlewareEmployee.validate(req);
+
+            console.log(errors);
 
             if (!errors) {
+
+                console.log("name",req.sanitize('name').escape().trim());
+
                 const employee = {
                     name: req.sanitize('name').escape().trim(),
                     email: req.sanitize('email').escape().trim(),
@@ -126,15 +132,15 @@ class EmployeeController {
 
                 if (result.affectedRows === 1) {
                     req.flash('success', 'Item Information update successfully.');
-                    res.redirect('/employee');
+                    res.redirect('/'+res.locals.locale + '/employee');
                 } else {
                     req.flash('error', 'There was error in updating item.');
-                    res.redirect('/employee/edit/' + employeeId);
+                    res.redirect('/'+res.locals.locale + '/employee/edit/' + employeeId);
                 }
             } else {
                 const err_msg = errors.map((err) => err.msg).join('<br/>');
                 req.flash('error', err_msg);
-                res.redirect('/employee/edit/' + companyId);
+                res.redirect('/'+res.locals.locale +  '/employee/edit/' + employeeId);
             }
         } catch (err) {
             throw err;

@@ -5,7 +5,8 @@
 
             <a class="btn btn-info ml-3 export_excel">export</a>
 
-            <form class="displayNone export_excel_real" action="/<%- locals.locale %>/customers/export-excel" method="post" name="form1">
+            <form class="displayNone export_excel_real" action="/<%- locals.locale %>/customers/export-excel"
+                  method="post" name="form1">
 
                 <button type="submit" class="btn btn-info">Export Excel</button>
             </form>
@@ -15,12 +16,14 @@
                 <button type="submit" class="btn btn-info ml-3">Generate</button>
             </form>
 
-            <form class="export_pdf_from_html" action="/<%- locals.locale %>/customers/export-pdf-from-html" method="post" name="form">
+            <form class="export_pdf_from_html" action="/<%- locals.locale %>/customers/export-pdf-from-html"
+                  method="post" name="form">
 
                 <button type="submit" class="btn btn-info ml-3">Generate from html</button>
             </form>
 
-            <form class="generate_pdf" action="/<%- locals.locale %>/customers/export-pdf-from-separate-html" method="post" name="form">
+            <form class="generate_pdf" action="/<%- locals.locale %>/customers/export-pdf-from-separate-html"
+                  method="post" name="form">
 
                 <button type="submit" class="btn btn-info ml-3">Generate from separate html</button>
             </form>
@@ -49,8 +52,13 @@
 
 
             <div class="panel-heading">
-                <%= title %><a href="/<%- locals.locale %>/customers/add" class="pull-right"><i
-                            class="fa fa-plus fa-fw"></i>Add item</a>
+                <%= title %>
+
+                <% if (userRole == 'admin') { %>
+                    <a href="/<%- locals.locale %>/customers/add" class="pull-right"><i
+                                class="fa fa-plus fa-fw"></i>Add item</a>
+                <% } %>
+
                 <a class="btn btn-info ml-3 delete_selected_real displayNone">delete-selected</a>
             </div>
 
@@ -105,10 +113,13 @@
                                     <%= item.description %>
                                 </td>
                                 <td>
-                                    <a href="/<%- locals.locale %>/<%- locals.locale %>/customers/edit/<%= item.id %>"><i class="fa fa-edit"></i></a>
-
+                                    <% if (userRole == 'admin') { %>
+                                        <a href="/<%- locals.locale %>/customers/edit/<%= item.id %>"><i
+                                                    class="fa fa-edit"></i></a>
+                                    <% } %>
                                     <a href="#" class="view-item" data-id="<%= item.id %>"><i class="fa fa-eye"></i></a>
-                                    <a href="/<%- locals.locale %>/customers/delete/<%= item.id %>"><i class="fa fa-remove"></i></a>
+                                    <a href="/<%- locals.locale %>/customers/delete/<%= item.id %>"><i
+                                                class="fa fa-remove"></i></a>
                                 </td>
                             </tr>
                         <% }) %>
@@ -146,12 +157,15 @@
 </div>
 
 <script>
-    console.log( );
+    console.log();
+
     // Define function to make AJAX call to /soap-parser
     function fetchSoapData() {
 
+        var locale = $("#curr_locale").length > 0 ? $("#curr_locale").val() : 'am';
+
         // Make AJAX call using fetch API
-        fetch(locals.locale+'/customers/soap-parser')
+        fetch('/' + locale + '/customers/soap-parser')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

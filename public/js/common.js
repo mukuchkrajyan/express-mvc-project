@@ -32,15 +32,18 @@ $(document).ready(function () {
     $(document).on('click', '.view-item', function (e) {
         e.preventDefault();
         var id = $(this).attr('data-id');
+        var locale = $("#curr_locale").length > 0 ? $("#curr_locale").val() : 'am';
+
+        // alert(locale);
         // alert(id);
         $.ajax({
-            url: "/customers/view",
+            url: "/"+locale+"/customers/view",
             type: 'POST',
             dataType: 'JSON',
             data: {id: id},
             success: function (response) {
 
-                console.log("response.status",response.status);
+                console.log("response.status", response.status);
 
                 console.log(response);
                 if (response.status == 1) {
@@ -52,7 +55,7 @@ $(document).ready(function () {
                     $modal.find('.item-description').text(response.data.description);
                     $modal.modal('show');
                 } else {
-                    alert("issue "+response.message);
+                    alert("issue " + response.message);
                 }
             }
         });
